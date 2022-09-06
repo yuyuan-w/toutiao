@@ -1,7 +1,6 @@
 <template>
-  <div>黑马头条
-    <van-button type="primary">主要按钮</van-button>
-    <div class="box"></div>
+  <div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -9,10 +8,4 @@
 export default {}
 </script>
 
-<style lang="less" scoped>
-.box {
-  width: 2rem;
-  height: 2rem;
- background-color: greenyellow;
-}
-</style>
+<style lang="less" scoped></style>

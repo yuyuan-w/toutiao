@@ -5,12 +5,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    tokenObj: {}
+    count: 0
   },
-  getters: {},
+  // 计算属性
+  getters: {
+    bigNum(state) {
+      return state.count * 10
+    }
+  },
   mutations: {
-    SET_TOKEN(state, token) {
-      state.tokenObj = token
+    SET_COUNT(state, payload) {
+      state.count += payload
     }
   },
   actions: {},

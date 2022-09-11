@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mobileRules, codeRules } from './rule'
+import { mobileRules, codeRules } from '@/views/Login/rule'
 import { login, sendCodeAPI } from '@/api'
 import { mapMutations } from 'vuex'
 export default {

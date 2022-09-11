@@ -118,7 +118,7 @@ export default {
         if (!this.isLogin) return
         const { data } = await getUserInfo()
         this.userInfo = data.data
-        console.log(data)
+        // console.log(data)
       } catch (error) {
         // 根据状态码进行判断
         if (error.response && error.response.status === 401) {

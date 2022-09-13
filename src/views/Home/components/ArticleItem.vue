@@ -12,7 +12,7 @@
       :title="article.title"
       :label="label"
     >
-      <van-image width="100" height="100" :src="article.cover.image[0]" />
+      <van-image width="100" height="100" :src="article.cover.images[0]" />
     </van-cell>
     <!-- 三张图片 -->
     <van-cell v-else :title="article.title">
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import dayjs from '@/utils/dayjs'
 export default {
   name: 'ArticleItem',
   props: {
@@ -43,7 +44,7 @@ export default {
     label() {
       /* eslint-disable */
       const { aut_name, comm_count, pubdate } = this.article
-      return `${aut_name} ${comm_count}评论 ${pubdate}`
+      return `${aut_name} ${comm_count}评论 ${dayjs(pubdate).fromNow()}`
     }
   }
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 1. executor执行器函数
+        // 2. resolve:把promise变成成功状态； reject:把promise变成失败状态；
+        // 3.value:记录成功的原因  reason：记录失败的原因
+        // 4.promise 三种状态 1.pending:准备态  2.fulfilled：完成态 3.rejected:拒绝态
+        // 5.promise状态只能改变一次，pending-fulfilled，pending-rejected  不能完成态，拒绝态相互转换
+        // 6.当promise在执行中，任何错误都能导致失败态
+        // 7.promise必须有then方法，onFulfilled:成功的回调   onRejected:失败的回调
+        // 8. 设计模式: 发布订阅模式: 订阅一些行为, 再在合适时机去执行(发布)
+        //   - 最简单: DOM事件 
+        //   - vue当中的自定义事件: $emit
+        //   - eventBus 
+        //   - promise 异步的时候
+
+        const PENDING = 'pending'
+        const FULFILLED = 'fulfilled'
+        const REJECTED = 'rejected'
+        class Promise {
+            value
+            reason
+            status = PENDING
+            onFulfilledCallBacks = []
+            onRejectedCallBacks = []
+            constructor(executor) {
+                const resolve = (value) => {
+                    if (this.status === PENDING) {
+                        this.value = value
+                        this.status = FULFILLED
+                        // this.onFulfilled(this.value)
+                        this.onFulfilledCallBacks.forEach(cb => cb())
+                    }
+                }
+                const reject = (reason) => {
+                    if (this.status === PENDING) {
+                        this.reason = reason
+                        this.status = REJECTED
+                        // this.onRejected(this.reason)
+                        this.onRejectedCallBacks.forEach(cb => cb())
+                    }
+                }
+                try {
+                    executor(resolve, reject)
+                } catch (error) {
+                    reject(error)
+                }
+            }
+            then(onFulfilled, onRejected) {
+                if (this.status === FULFILLED) {
+                    onFulfilled(this.value)
+                }
+                if (this.status === REJECTED) {
+                    onRejected(this.reason)
+                }
+                if (this.status === PENDING) {
+                    // 异步订阅
+                    // this.onFulfilled = onFulfilled
+                    // this.onRejected = onRejected
+                    this.onFulfilledCallBacks.push(() => {
+                        onFulfilled(this.value)
+                    })
+                    this.onRejectedCallBacks.push(() => {
+                        onRejected(this.reason)
+                    })
+                }
+            }
+        }
+        const p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // reject('失败')
+                resolve('成功')
+            }, 2000)
+
+        })
+        p.then(
+            (res) => console.log('第一次', res),
+        )
+        p.then(
+            (res) => console.log('第二次', res),
+        )
+
+    </script>
+</body>
+
+</html>

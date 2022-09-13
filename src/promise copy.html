@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const PENDING = 'pending'
+        const FULFILLED = 'fulfilled'
+        const REJECTED = 'rejected'
+        class Promise {
+            value
+            reason
+            status = PENDING
+            onFulfilledCallBacks = []
+            onRejectedCallBacks = []
+            constructor(executor) {
+                const resolve = (value) => {
+                    if (this.status === PENDING) {
+                        this.value = value
+                        this.status = FULFILLED
+                        this.onFulfilledCallBacks.forEach(cb => cb())
+                    }
+                }
+                const reject = (reason) => {
+                    if (this.status === PENDING) {
+                        this.reason = reason
+                        this.status = REJECTED
+                        this.onRejectedCallBacks.forEach(cb => cb())
+                    }
+                }
+                try {
+                    executor(resolve, reject)
+                } catch (error) {
+                    reject(error)
+                }
+            }
+            then(onFulfilled, onRejected) {
+                if (this.status === FULFILLED) {
+                    onFulfilled(this.value)
+                }
+                if (this.status === REJECTED) {
+                    onRejected(this.reason)
+                }
+                if (this.status === PENDING) {
+                    this.onFulfilledCallBacks.push(() => {
+                        onFulfilled(this.value)
+                    })
+                    this.onRejectedCallBacks.push(() => {
+                        onRejected(this.reason)
+                    })
+                }
+            }
+        }
+        const p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('成功')
+                // reject('失败')
+            }, 2000)
+        })
+        p.then(
+            (res) => console.log('第一次', res),
+        )
+        p.then(
+            (res) => console.log('第二次', res),
+        )
+    </script>
+</body>
+
+</html>
